@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -266,7 +265,7 @@ function Dashboard() {
   return (
     <div className="max-w-6xl mx-auto p-4 text-sm space-y-6">
       <div>
-        <h2 className="text-lg font-medium mb-1">Dashboard PDM — matrices mensuelles éditables (17 PE)</h2>
+        <h2 className="text-lg font-medium mb-1">Dashboard PDM — 17 PE</h2>
         <p className="text-gray-500 text-xs">Effectifs, heures/personne, présence, productivité et appels prévus sont éditables mois par mois. Tout se recalcule en direct et reste relié : Effectifs → Capacité, Appels prévus ÷ Productivité → Besoin, Compétences → Capacité disponible par PE.</p>
       </div>
 
@@ -544,7 +543,7 @@ function Dashboard() {
       {ongletActif === 'competences' && (
         <div className="overflow-x-auto">
           <p className="text-xs text-gray-400 mb-2">
-            Ne varie pas dans le temps (simplification assumée). Formule reliée : Capacité disponible[pe] = Σ (cases cochées) Effectif × Heures/pers × Présence.
+            Ne varie pas dans le temps. Formule reliée : Capacité disponible[pe] = Σ (cases cochées) Effectif × Heures/pers × Présence.
             Les lignes "Capacité dispo (h)" et "Besoin (h)" ci-dessous se recalculent en direct pour le mois sélectionné ({MOIS[moisIdx]}) — décochez une case et regardez-les bouger.
           </p>
           <table className="border-collapse text-xs">
