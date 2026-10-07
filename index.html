@@ -9,67 +9,143 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
 <style>
-  :root { box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  /* Styles locaux : la maquette reste lisible si Tailwind ne se charge pas. */
+  *, *::before, *::after { box-sizing: border-box; }
   html { scroll-padding-top: env(safe-area-inset-top, 0px); }
-  body { background:#fff; }
+  body { margin: 0; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); background: #fff; color: #111827; font: 14px/1.5 Arial, Helvetica, sans-serif; }
+  h2, h3, p { margin: 0; }
+  h2 { font-size: 18px; }
+  button, input, select { font: inherit; }
+  button { background: transparent; border: 0; cursor: pointer; }
+  table { border-collapse: collapse; }
+  th { font-weight: 400; }
+  input[type="checkbox"] { cursor: pointer; }
+  #root > div { max-width: 1152px; margin: 0 auto; padding: 16px; }
+  .space-y-6 > * + * { margin-top: 24px; }
+  .space-y-4 > * + * { margin-top: 16px; }
+  .space-y-1 > * + * { margin-top: 4px; }
+  .flex { display: flex; }
+  .flex-1 { flex: 1 1 0%; min-width: 0; }
+  .items-center { align-items: center; }
+  .gap-0\.5 { gap: 2px; }
+  .gap-1 { gap: 4px; }
+  .gap-2 { gap: 8px; }
+  .gap-3 { gap: 12px; }
+  .gap-4 { gap: 16px; }
+  .grid { display: grid; }
+  .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .inline-block { display: inline-block; }
+  .w-full { width: 100%; }
+  .w-2\.5 { width: 10px; }
+  .h-2\.5 { height: 10px; }
+  .w-10 { width: 40px; flex-shrink: 0; }
+  .w-20 { width: 80px; flex-shrink: 0; }
+  .h-4 { height: 16px; }
+  .p-3 { padding: 12px; }
+  .p-4 { padding: 16px; }
+  .px-1 { padding-left: 4px; padding-right: 4px; }
+  .px-2 { padding-left: 8px; padding-right: 8px; }
+  .px-3 { padding-left: 12px; padding-right: 12px; }
+  .py-0\.5 { padding-top: 2px; padding-bottom: 2px; }
+  .py-1 { padding-top: 4px; padding-bottom: 4px; }
+  .py-2 { padding-top: 8px; padding-bottom: 8px; }
+  .pb-1 { padding-bottom: 4px; }
+  .pt-4 { padding-top: 16px; }
+  .pr-2 { padding-right: 8px; }
+  .pr-4 { padding-right: 16px; }
+  .mt-2 { margin-top: 8px; }
+  .mt-4 { margin-top: 16px; }
+  .mb-1 { margin-bottom: 4px; }
+  .mb-2 { margin-bottom: 8px; }
+  .text-xs { font-size: 12px; }
+  .text-sm { font-size: 14px; }
+  .text-lg { font-size: 18px; }
+  .text-xl { font-size: 20px; }
+  .text-left { text-align: left; }
+  .text-right { text-align: right; }
+  .text-center { text-align: center; }
+  .font-medium { font-weight: 500; }
+  .font-normal { font-weight: 400; }
+  .text-gray-400 { color: #9ca3af; }
+  .text-gray-500 { color: #6b7280; }
+  .text-blue-600 { color: #2563eb; }
+  .text-blue-700 { color: #1d4ed8; }
+  .text-yellow-600 { color: #ca8a04; }
+  .text-yellow-700 { color: #a16207; }
+  .text-green-700 { color: #15803d; }
+  .text-red-700 { color: #b91c1c; }
+  .text-purple-700 { color: #7e22ce; }
+  .bg-white { background: #fff; }
+  .bg-gray-50 { background: #f9fafb; }
+  .bg-blue-50 { background: #eff6ff; }
+  .bg-yellow-50 { background: #fefce8; }
+  .bg-purple-50 { background: #faf5ff; }
+  .bg-blue-400 { background: #60a5fa; }
+  .bg-yellow-400 { background: #facc15; }
+  .bg-green-600 { background: #16a34a; }
+  .bg-red-500 { background: #ef4444; }
+  .border { border: 1px solid #d1d5db; }
+  .border-gray-300 { border-color: #d1d5db; }
+  .border-b { border-bottom: 1px solid #e5e7eb; }
+  .border-b-2 { border-bottom: 2px solid #2563eb; }
+  .border-t { border-top: 1px solid #f3f4f6; }
+  .border-t-2 { border-top: 2px solid #9ca3af; }
+  .rounded { border-radius: 4px; }
+  .rounded-sm { border-radius: 2px; }
+  .rounded-lg { border-radius: 8px; }
+  .overflow-x-auto { overflow-x: auto; }
+  .sticky { position: sticky; }
+  .left-0 { left: 0; }
+  .whitespace-nowrap { white-space: nowrap; }
+  .repartition-launch { background: #1d4ed8; color: white; padding: 10px 16px; border-radius: 6px; font-weight: 500; }
+  .repartition-dialog { width: 96vw; max-width: 1600px; max-height: 92vh; padding: 0; border: 1px solid #cbd5e1; border-radius: 12px; color: #111827; box-shadow: 0 20px 70px #0004; }
+  .repartition-dialog::backdrop { background: #0f172a88; }
+  .repartition-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 20px; background: #eff6ff; }
+  .repartition-content { padding: 16px 20px 24px; }
+  .repartition-dialog input:disabled { background: #f3f4f6; color: #9ca3af; }
+  .cles-table th, .cles-table td { padding: 5px 6px; white-space: nowrap; }
+  .cles-table thead { background: #eff6ff; }
+  .cles-table thead th { font-weight: 600; }
+  .cles-table .population-start { border-top: 1px solid #cbd5e1; }
+  .cles-table .other-populations { background: #f8fafc; }
+  .percent-control { display: inline-flex; width: 78px; align-items: stretch; }
+  .percent-control input { width: 60px; min-width: 0; border-radius: 4px 0 0 4px; appearance: textfield; -moz-appearance: textfield; }
+  .percent-control input::-webkit-inner-spin-button, .percent-control input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .percent-controls { display: flex; flex-direction: column; width: 18px; }
+  .percent-controls button { border: 1px solid #cbd5e1; background: #f8fafc; padding: 0; font: 8px/12px Arial, sans-serif; color: #334155; }
+  .percent-controls button:first-child { border-radius: 0 4px 0 0; border-bottom: 0; }
+  .percent-controls button:last-child { border-radius: 0 0 4px 0; }
+  .percent-controls button:hover:not(:disabled) { background: #dbeafe; }
+  .percent-controls button:disabled { color: #9ca3af; cursor: default; }
+  @media (max-width: 640px) { .grid-cols-3 { grid-template-columns: 1fr; } #root > div { padding: 12px; } }
 </style>
 </head>
 <body>
-
-<div id="password-gate" style="position:fixed;inset:0;z-index:99999;background:#f8fafc;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;">
-  <div style="width:min(92%,380px);background:white;border:1px solid #e5e7eb;border-radius:16px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,.08);text-align:center;">
-    <h1 style="font-size:22px;margin:0 0 8px;">Accès protégé</h1>
-    <p style="font-size:14px;color:#6b7280;margin:0 0 20px;">Entrez le mot de passe pour accéder au dashboard.</p>
-    <input id="password-input" type="password" placeholder="Mot de passe"
-      style="width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #d1d5db;border-radius:8px;margin-bottom:10px;outline:none;">
-    <button id="password-button"
-      style="width:100%;padding:11px 12px;border:0;border-radius:8px;background:#111827;color:white;font-weight:600;cursor:pointer;">
-      Accéder
-    </button>
-    <p id="password-error" style="display:none;color:#b91c1c;font-size:13px;margin:12px 0 0;">Mot de passe incorrect.</p>
-  </div>
-</div>
-
-<script>
-(function () {
-  const PASSWORD = "pilotekahia2027";
-  const gate = document.getElementById("password-gate");
-  const input = document.getElementById("password-input");
-  const button = document.getElementById("password-button");
-  const error = document.getElementById("password-error");
-
-  function verifyPassword() {
-    if (input.value === PASSWORD) {
-      gate.style.display = "none";
-      sessionStorage.setItem("dashboard_access", "granted");
-    } else {
-      error.style.display = "block";
-      input.value = "";
-      input.focus();
-    }
-  }
-
-  if (sessionStorage.getItem("dashboard_access") === "granted") {
-    gate.style.display = "none";
-  }
-
-  button.addEventListener("click", verifyPassword);
-  input.addEventListener("keydown", function (event) {
-    if (event.key === "Enter") verifyPassword();
-  });
-
-  input.focus();
-})();
-</script>
-
 <div id="root"></div>
 <script type="text/babel" data-presets="react">
-const { useState, useMemo } = React;
+const { useState, useMemo, useRef, useEffect } = React;
 
 const MOIS = ["Jan","Fev","Mar","Avr","Mai","Juin","Juil","Aout","Sept","Oct","Nov","Dec"];
-const SITES = ['PTV', 'PTM', 'PTS'];
+const DR = Array.from({ length: 7 }, (_, i) => `DR${i + 1}`);
+const SITES = ['PTV', 'PTM', 'PTS', ...DR];
 const STATUTS = ['CDI', 'CDD', 'ALT'];
-const SITE_STATUTS = SITES.flatMap((s) => STATUTS.map((st) => `${s}_${st}`));
+const POPULATIONS = [
+  { key: 'PTV_ENT', site: 'PTV', name: 'TLV ENT' },
+  { key: 'PTV_MULTI', site: 'PTV', name: 'TLV MULTI' },
+  { key: 'PTV_SNT', site: 'PTV', name: 'TLV SNT' },
+  { key: 'PTS_POLY', site: 'PTS', name: 'TLV POLY' },
+  { key: 'PTS_SNT', site: 'PTS', name: 'TLV SNT' },
+  { key: 'PTM_EPI', site: 'PTM', name: 'TLV EPI' },
+  { key: 'PTM_SNT', site: 'PTM', name: 'TLV SNT' },
+  ...DR.map((name) => ({ key: name, site: name, name })),
+];
+const POPULATION_STATUTS = POPULATIONS.flatMap((population) => STATUTS.map((statut) => ({
+  ...population, population: population.key, statut, key: `${population.key}_${statut}`,
+  label: `${population.site === population.name ? population.name : `${population.site} / ${population.name}`} / ${statut === 'ALT' ? 'Alternants' : statut}`,
+})));
+const POPULATIONS_CLES = ['PTS_POLY', 'PTS_SNT', 'PTM_SNT'];
+const LIGNES_CLES = POPULATIONS_CLES.flatMap((population) => POPULATION_STATUTS.filter((row) => row.population === population));
+const AUTRES_LIGNES_CLES = POPULATION_STATUTS.filter((row) => !POPULATIONS_CLES.includes(row.population));
 
 const PE_LIST = [
   { key: 'SNT', name: 'SNT GEN' }, { key: 'TRT', name: 'TRTLVINT' }, { key: 'VAC', name: 'VAC GEN' },
@@ -77,17 +153,53 @@ const PE_LIST = [
   { key: 'NCD', name: 'TLV NCD' }, { key: 'MAV', name: 'MAV' }, { key: 'OPS', name: 'OPSURCO' },
   { key: 'GAM', name: 'GAMPART' }, { key: 'MUL', name: 'MULTI' }, { key: 'AST', name: 'ASSTECH' },
   { key: 'AMD', name: 'AMHAUD' },
-  { key: 'TGG', name: 'TLV INT GG' },
-  { key: 'EPI', name: 'TLV EPI' },
-  { key: 'SP2', name: 'TLV SPE2' },
-  { key: 'SPE', name: 'SPE2' },
+  { key: 'TLVINTGG', name: 'TLV INT GG' }, { key: 'EPI', name: 'TLV EPI' },
+  { key: 'TLVSPE2', name: 'TLV SPE2' }, { key: 'SPE2', name: 'SPE2' },
 ];
 
+// Effectifs mensuels par population et statut, de janvier a decembre.
 const INIT_EFFECTIFS = {
-  PTV: { CDI: [40,40,40,40,40,40,40,40,40,40,40,40], CDD: [15,15,15,5,5,6,3,1,1,14,17,16], ALT: [10,10,10,10,10,10,10,6,7,7,7,7] },
-  PTM: { CDI: [9,9,9,11,11,11,11,11,11,11,11,11], CDD: [10,10,10,0,0,0,0,0,0,0,0,0], ALT: [1,1,1,1,1,1,1,1,4,4,4,4] },
-  PTS: { CDI: [8,8,8,14,14,16,19,19,19,19,19,19], CDD: [10,10,10,0,0,0,0,0,0,9,9,9], ALT: [2,2,2,2,2,2,2,2,4,4,4,4] },
+  PTV_ENT: {
+    CDI: [8,8,8,8,8,8,8,8,8,8,8,8],
+    CDD: [3,3,3,1,1,1,1,1,1,3,3,3],
+    ALT: [2,2,2,2,2,2,2,2,1,1,1,1],
+  },
+  PTV_MULTI: {
+    CDI: [32,32,32,32,32,32,32,32,32,32,32,32],
+    CDD: [12,12,12,4,4,4,4,4,4,12,12,12],
+    ALT: [8,8,8,8,8,8,8,8,1,1,1,1],
+  },
+  PTV_SNT: {
+    CDI: [0,0,0,0,0,0,0,0,0,0,0,0],
+    CDD: [0,0,0,0,0,0,0,0,0,0,0,0],
+    ALT: [0,0,0,0,0,0,0,0,0,0,0,0],
+  },
+  PTS_POLY: {
+    CDI: [8,8,8,8,8,8,8,8,8,8,8,8],
+    CDD: [0,0,0,0,0,0,0,0,0,0,0,0],
+    ALT: [0,0,0,0,0,0,0,0,0,0,0,0],
+  },
+  PTS_SNT: {
+    CDI: [0,0,0,0,0,0,0,0,0,0,0,0],
+    CDD: [10,10,10,0,0,0,0,0,0,0,0,0],
+    ALT: [2,2,2,2,2,2,2,2,2,2,2,2],
+  },
+  PTM_EPI: {
+    CDI: [9,9,9,9,9,9,9,9,9,9,9,9],
+    CDD: [0,0,0,0,0,0,0,0,0,0,0,0],
+    ALT: [1,1,1,1,1,1,0,0,0,0,0,0],
+  },
+  PTM_SNT: {
+    CDI: [0,0,0,0,0,0,0,0,0,0,0,0],
+    CDD: [10,10,10,0,0,0,0,0,0,0,0,0],
+    ALT: [0,0,0,0,0,0,0,0,0,0,0,0],
+  },
 };
+
+// Les effectifs des nouvelles DR sont à renseigner pour chaque mois et statut.
+DR.forEach((key) => {
+  INIT_EFFECTIFS[key] = Object.fromEntries(STATUTS.map((statut) => [statut, Array(12).fill(0)]));
+});
 
 const INIT_HEURES = {
   CDI: [87.19,83.31,91.68,111.49,98.22,110.88,91.27,87.19,91.48,91.68,103.52,92.09],
@@ -103,11 +215,9 @@ const INIT_PRODUCTIVITE = {
   NCD:[5,5,5,5,5,5,5,5,5,5,5,5], MAV:[5,5,5,5,5,5,5,5,5,5,5,5],
   OPS:[8,8,8,8,8,8,8,8,8,8,8,8], GAM:[13,13,13,10,10,10,10,10,10,10,10,10],
   MUL:[5,5,5,3,3,3,3,3,3,3,3,3], AST:[5,5,5,4,4,4,4,4,4,4,4,4],
-  AMD:[9,9,9,7,7,7,7,7,7,7,7,7],
-  TGG:[0,0,0,0,0,0,0,0,0,0,0,0],
-  EPI:[0,0,0,0,0,0,0,0,0,0,0,0],
-  SP2:[0,0,0,0,0,0,0,0,0,0,0,0],
-  SPE:[0,0,0,0,0,0,0,0,0,0,0,0],
+  AMD: Array(12).fill(9),
+  TLVINTGG: Array(12).fill(3), SPE2: Array(12).fill(10),
+  TLVSPE2: Array(12).fill(8), EPI: Array(12).fill(5),
 };
 
 const INIT_APPELS = {
@@ -123,24 +233,130 @@ const INIT_APPELS = {
   GAM:[48.9,47,51.9,61.7,53.6,62.1,50.3,49.5,51.4,50.9,58.2,50.6],
   MUL:[507.7,487,541.1,648.2,559.7,652.9,522.8,514.3,535,530.2,610.4,526.7],
   AST:[171.2,164.3,182.4,218.1,188.6,219.6,176.3,173.4,180.3,178.7,205.5,177.6],
-  AMD:[18.3,17.7,19.3,22.6,19.9,22.7,18.8,18.5,19.1,19,21.4,18.9],
-  TGG:[0,0,0,0,0,0,0,0,0,0,0,0],
-  EPI:[0,0,0,0,0,0,0,0,0,0,0,0],
-  SP2:[0,0,0,0,0,0,0,0,0,0,0,0],
-  SPE:[0,0,0,0,0,0,0,0,0,0,0,0],
+  AMD:[18.0,18.0,19.0,23.0,20.0,23.0,19.0,18.0,19.0,19.0,21.0,19.0],
+  EPI:[1107.0,1018.0,1003.0,1131.0,1053.0,2172.0,1788.0,1708.0,1792.0,1796.0,2028.0,1804.0],
+  TLVSPE2:[5502.0,3497.0,3234.0,2981.0,2711.0,3275.0,2933.0,1954.0,2840.0,2765.0,3893.0,3905.0],
+  SPE2:[8684.0,4329.0,170.0,1.0,1.0,1.0,1.0,1.0,1.0,167.0,5837.0,5588.0],
+  TLVINTGG:[264.0,254.0,282.0,337.0,291.0,424.0,340.0,334.0,347.0,345.0,396.0,343.0],
 };
 
-const INIT_ELIG = {
-  PTV_CDI: { SNT:1,TRT:1,VAC:1,AEM:1,AMH:1,CCH:1,NCD:1,MAV:1,OPS:1,GAM:1,MUL:1,AST:1,AMD:1,TGG:0,EPI:0,SP2:0,SPE:0 },
-  PTV_CDD: { SNT:1,TRT:1,VAC:1,AEM:1,AMH:1,CCH:1,NCD:1,MAV:1,OPS:1,GAM:1,MUL:1,AST:0,AMD:0,TGG:0,EPI:0,SP2:0,SPE:0 },
-  PTV_ALT: { SNT:1,TRT:1,VAC:1,AEM:1,AMH:1,CCH:1,NCD:1,MAV:1,OPS:1,GAM:1,MUL:1,AST:0,AMD:0,TGG:0,EPI:0,SP2:0,SPE:0 },
-  PTM_CDI: { SNT:0,TRT:0,VAC:0,AEM:0,AMH:0,CCH:0,NCD:0,MAV:0,OPS:0,GAM:0,MUL:0,AST:0,AMD:0,TGG:0,EPI:0,SP2:0,SPE:0 },
-  PTM_CDD: { SNT:1,TRT:1,VAC:0,AEM:0,AMH:0,CCH:0,NCD:1,MAV:1,OPS:0,GAM:0,MUL:0,AST:0,AMD:0,TGG:0,EPI:0,SP2:0,SPE:0 },
-  PTM_ALT: { SNT:0,TRT:0,VAC:0,AEM:0,AMH:0,CCH:0,NCD:0,MAV:0,OPS:0,GAM:0,MUL:0,AST:0,AMD:0,TGG:0,EPI:0,SP2:0,SPE:0 },
-  PTS_CDI: { SNT:1,TRT:1,VAC:0,AEM:1,AMH:1,CCH:0,NCD:1,MAV:1,OPS:0,GAM:0,MUL:0,AST:0,AMD:0,TGG:0,EPI:0,SP2:0,SPE:0 },
-  PTS_CDD: { SNT:1,TRT:1,VAC:0,AEM:0,AMH:0,CCH:0,NCD:1,MAV:1,OPS:0,GAM:0,MUL:0,AST:0,AMD:0,TGG:0,EPI:0,SP2:0,SPE:0 },
-  PTS_ALT: { SNT:1,TRT:1,VAC:0,AEM:0,AMH:0,CCH:0,NCD:1,MAV:1,OPS:0,GAM:0,MUL:0,AST:0,AMD:0,TGG:0,EPI:0,SP2:0,SPE:0 },
+// Coches du classeur tableau_validation_kapa_comp.xlsx, lignes 15-25.
+// Le classeur etant par site/statut, ses coches sont reprises pour chaque population correspondante.
+const COMPETENCES_SITE_STATUT = {
+  PTV_CDI: ['SNT','TRT','AMH','VAC','AEM','CCH','NCD','MAV','OPS','GAM','MUL','AST','AMD'],
+  PTV_CDD: ['SNT','TRT','AMH','VAC','AEM','CCH','NCD','MAV','OPS','GAM','MUL'],
+  PTV_ALT: ['SNT','TRT','AMH','VAC','AEM','CCH','NCD','MAV','OPS','GAM','MUL'],
+  PTM_CDI: [],
+  PTM_CDD: ['SNT','TRT','EPI'],
+  PTM_ALT: ['NCD','TLVSPE2','SPE2','MAV'],
+  PTS_CDI: ['SNT','TRT','TLVINTGG','AMH','AEM','NCD','TLVSPE2','MAV'],
+  PTS_CDD: ['SNT','TRT','NCD','TLVSPE2','MAV','MUL'],
+  PTS_ALT: ['SNT','TRT','NCD','TLVSPE2','SPE2','MAV','MUL'],
 };
+const INIT_ELIG = Object.fromEntries(POPULATION_STATUTS.map(({ key, site, statut }) => [key,
+  Object.fromEntries(PE_LIST.map((pe) => [pe.key, (COMPETENCES_SITE_STATUT[`${site}_${statut}`] || []).includes(pe.key) ? 1 : 0]))
+]));
+
+// Les PE sans donnees restent a renseigner, sans modifier les totaux existants.
+PE_LIST.forEach(({ key }) => {
+  if (!INIT_PRODUCTIVITE[key]) INIT_PRODUCTIVITE[key] = Array(12).fill('');
+  if (!INIT_APPELS[key]) INIT_APPELS[key] = Array(12).fill('');
+
+});
+
+// Clés : matricerepartition.xlsx / repartition, H:S (janvier à décembre 2026).
+// Les clés absentes du fichier restent à renseigner.
+const INIT_FLUX = {"SNT":{"PTV_ENT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDI":[0.34,0.35,0.3,0.63,0.57,0.59,0.55,0.61,0.46,0.38,0.36,0.36],"PTV_MULTI_CDD":[0.16,0.17,0.15,0.08,0.07,0.08,0.01,0.09,0.05,0.16,0.15,0.15],"PTV_MULTI_ALT":[0.03,0.02,0.02,0.06,0.05,0.06,0.06,0.03,0.02,0.02,0.02,0.02],"PTV_SNT_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTV_SNT_CDD":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTV_SNT_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_POLY_CDI":[0.07,0.08,0.08,0.22,0.24,0.26,0.37,0.26,0.3,0.11,0.13,0.14],"PTS_POLY_CDD":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_POLY_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_SNT_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_SNT_CDD":[0.15,0.21,0.21,0.0,0.0,0.0,0.0,0.0,0.0,0.15,0.17,0.17],"PTS_SNT_ALT":[0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.03,0.03,0.03,0.03],"PTM_EPI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTM_SNT_CDD":[0.15,0.16,0.23,0.0,0.0,0.0,0.0,0.0,0.0,0.15,0.15,0.14],"PTM_SNT_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]},"TRT":{"PTV_ENT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDI":[0.45,0.42,0.4,0.58,0.7,0.71,0.65,0.7,0.5,0.4,0.38,0.37],"PTV_MULTI_CDD":[0.17,0.2,0.21,0.08,0.05,0.05,0.03,0.09,0.05,0.16,0.16,0.16],"PTV_MULTI_ALT":[0.03,0.06,0.07,0.06,0.06,0.06,0.06,0.03,0.02,0.02,0.02,0.02],"PTV_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDI":[0.07,0.07,0.07,0.25,0.18,0.17,0.25,0.25,0.14,0.17,0.2,0.19],"PTS_POLY_CDD":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_POLY_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_SNT_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_SNT_CDD":[0.1,0.1,0.1,0.0,0.0,0.0,0.0,0.0,0.0,0.1,0.09,0.11],"PTS_SNT_ALT":[0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.03,0.02,0.02,0.02],"PTM_EPI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTM_SNT_CDD":[0.1,0.14,0.14,0.0,0.0,0.0,0.0,0.0,0.0,0.13,0.13,0.13],"PTM_SNT_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]},"TLVINTGG":{"PTV_ENT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTV_MULTI_CDD":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTV_MULTI_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTV_SNT_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTV_SNT_CDD":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTV_SNT_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_POLY_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_POLY_CDD":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_POLY_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_SNT_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_SNT_CDD":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_SNT_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTM_EPI_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTM_EPI_CDD":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTM_EPI_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTM_SNT_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTM_SNT_CDD":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTM_SNT_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]},"AMH":{"PTV_ENT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDI":[0.5,0.49,0.49,0.47,0.47,0.48,0.58,0.58,0.5,0.5,0.5,0.5],"PTV_MULTI_CDD":[0.15,0.15,0.15,0.15,0.15,0.15,0.06,0.16,0.15,0.15,0.15,0.15],"PTV_MULTI_ALT":[0.03,0.03,0.04,0.06,0.06,0.06,0.06,0.03,0.03,0.02,0.02,0.02],"PTV_SNT_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTV_SNT_CDD":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTV_SNT_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_POLY_CDI":[0.32,0.32,0.32,0.32,0.32,0.32,0.3,0.34,0.32,0.33,0.33,0.33],"PTS_POLY_CDD":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_POLY_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_SNT_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_SNT_CDD":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_SNT_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTM_EPI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null]},"VAC":{"PTV_ENT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null]},"AEM":{"PTV_ENT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDI":[0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45],"PTV_MULTI_CDD":[0.17,0.17,0.17,0.15,0.15,0.15,0.1,0.15,0.15,0.16,0.16,0.16],"PTV_MULTI_ALT":[0.03,0.03,0.04,0.06,0.06,0.06,0.06,0.03,0.03,0.02,0.02,0.02],"PTV_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDI":[0.35,0.35,0.35,0.35,0.35,0.35,0.35,0.36,0.36,0.36,0.36,0.36],"PTS_POLY_CDD":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_POLY_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null]},"CCH":{"PTV_ENT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null]},"NCD":{"PTV_ENT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDI":[0.41,0.4,0.4,0.58,0.58,0.58,0.58,0.6,0.59,0.37,0.4,0.4],"PTV_MULTI_CDD":[0.17,0.17,0.17,0.08,0.08,0.08,0.08,0.09,0.09,0.16,0.16,0.16],"PTV_MULTI_ALT":[0.03,0.03,0.04,0.06,0.06,0.06,0.06,0.03,0.03,0.02,0.02,0.02],"PTV_SNT_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTV_SNT_CDD":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTV_SNT_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_POLY_CDI":[0.3,0.3,0.3,0.25,0.26,0.26,0.26,0.26,0.3,0.32,0.3,0.3],"PTS_POLY_CDD":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_POLY_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_SNT_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_SNT_CDD":[0.05,0.02,0.02,0.0,0.0,0.0,0.0,0.0,0.0,0.02,0.03,0.02],"PTS_SNT_ALT":[0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.03,0.02,0.02,0.02],"PTM_EPI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null]},"EPI":{"PTV_ENT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null]},"TLVSPE2":{"PTV_ENT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDI":[0.1,0.1,0.1,0.95,0.95,0.95,0.95,0.95,0.95,0.07,0.07,0.07],"PTS_POLY_CDD":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_POLY_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_SNT_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_SNT_CDD":[0.39,0.39,0.39,0.0,0.0,0.0,0.0,0.0,0.0,0.42,0.42,0.42],"PTS_SNT_ALT":[0.01,0.01,0.01,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05],"PTM_EPI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTM_SNT_CDD":[0.5,0.5,0.5,0.0,0.0,0.0,0.0,0.0,0.0,0.46,0.46,0.46],"PTM_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null]},"SPE2":{"PTV_ENT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDI":[0.1,0.1,0.1,0.26,0.26,0.26,0.26,0.26,0.26,0.15,0.2,0.2],"PTS_POLY_CDD":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_POLY_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_SNT_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_SNT_CDD":[0.5,0.4,0.4,0.0,0.0,0.0,0.0,0.0,0.0,0.35,0.37,0.37],"PTS_SNT_ALT":[0.05,0.01,0.01,0.01,0.01,0.01,0.01,0.01,0.03,0.02,0.02,0.02],"PTM_EPI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTM_SNT_CDD":[0.35,0.49,0.45,0.0,0.0,0.0,0.0,0.0,0.0,0.25,0.41,0.41],"PTM_SNT_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]},"MAV":{"PTV_ENT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDI":[0.41,0.4,0.4,0.58,0.58,0.58,0.58,0.6,0.59,0.37,0.37,0.37],"PTV_MULTI_CDD":[0.17,0.17,0.17,0.08,0.08,0.08,0.08,0.09,0.09,0.16,0.16,0.16],"PTV_MULTI_ALT":[0.03,0.03,0.04,0.06,0.06,0.06,0.06,0.03,0.03,0.02,0.02,0.02],"PTV_SNT_CDI":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTV_SNT_CDD":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTV_SNT_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_POLY_CDI":[0.1,0.1,0.1,0.26,0.26,0.26,0.26,0.26,0.29,0.43,0.43,0.44],"PTS_POLY_CDD":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_POLY_ALT":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"PTS_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null]},"OPS":{"PTV_ENT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null]},"GAM":{"PTV_ENT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null]},"MUL":{"PTV_ENT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null]},"AST":{"PTV_ENT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null]},"AMD":{"PTV_ENT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_ENT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_MULTI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTV_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_POLY_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTS_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_EPI_ALT":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDI":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_CDD":[null,null,null,null,null,null,null,null,null,null,null,null],"PTM_SNT_ALT":[null,null,null,null,null,null,null,null,null,null,null,null]}};
+// Les pourcentages Excel portent sur le flux du PE, pas sur les heures de la population.
+
+// Les DR ne traitent initialement aucun flux ; leur participation est simulable pour tout PE.
+PE_LIST.forEach(({ key: pe }) => {
+  DR.forEach((dr) => STATUTS.forEach((statut) => {
+    INIT_FLUX[pe][`${dr}_${statut}`] = Array(12).fill(0);
+  }));
+});
+// Une répartition horaire automatique est calculée à partir de la charge reçue.
+const positive = (v) => Math.max(0, Number(v) || 0);
+const percentText = (v) => (v * 100).toLocaleString('fr-FR', { maximumFractionDigits: 2 });
+const INIT_REPARTITION_HEURES = Object.fromEntries(POPULATION_STATUTS.map(({ key }) => [key, Array(12).fill(null)]));
+// Une part de flux positive dans la référence atteste la compétence de cette population.
+POPULATION_STATUTS.forEach(({ key }) => PE_LIST.forEach(({ key: pe }) => {
+  if (INIT_FLUX[pe][key].some((v) => v > 0)) INIT_ELIG[key][pe] = 1;
+}));
+
+function calculerMois(i, effectifs, heures, presence, productivite, appels, elig, flux, repartitionHeures) {
+  const poolSite = Object.fromEntries(SITES.map((s) => [s, 0]));
+  const affecteSite = { ...poolSite }, chargeSite = { ...poolSite };
+  const poolPopulationStatut = {}, chargePopulation = {}, partsHeures = {}, heuresParPopulationPE = {};
+  const capaciteDisponibleParPE = {}, besoinHeures = {}, sitesEligiblesParPE = {}, typeParPE = {}, totalFlux = {};
+  const donneesManquantes = [], fluxHorsCompetence = [];
+  PE_LIST.forEach(({ key }) => {
+    const p = positive(productivite[key][i]);
+    const a = appels[key][i];
+    const connu = a !== '' && a !== null && a !== undefined && (positive(a) === 0 || p > 0);
+    if (!connu) donneesManquantes.push(key);
+    besoinHeures[key] = connu && p > 0 ? positive(a) / p : 0;
+    capaciteDisponibleParPE[key] = 0;
+    totalFlux[key] = 0;
+    sitesEligiblesParPE[key] = SITES.filter((s) => POPULATION_STATUTS.some((row) => row.site === s && elig[row.key][key] === 1));
+    // Le caractère multisites est une règle métier, indépendante des compétences actuelles.
+    typeParPE[key] = 'MULTI';
+  });
+  POPULATION_STATUTS.forEach(({ key: ss, population, statut, site }) => {
+    const capacite = positive(effectifs[population][statut][i]) * positive(heures[statut][i]) * Math.min(1, positive(presence[statut][i]));
+    poolPopulationStatut[ss] = capacite;
+    poolSite[site] += capacite;
+    const charge = {};
+    PE_LIST.forEach(({ key }) => {
+      const part = positive(flux[key][ss][i]);
+      const eligible = elig[ss][key] === 1;
+      if (part > 0 && !eligible) fluxHorsCompetence.push(`${ss} / ${key}`);
+      totalFlux[key] += eligible ? part : 0;
+      charge[key] = eligible ? besoinHeures[key] * part : 0;
+    });
+    chargePopulation[ss] = charge;
+    const chargeTotale = Object.values(charge).reduce((a, v) => a + v, 0);
+    chargeSite[site] += chargeTotale;
+    const manuel = repartitionHeures[ss][i];
+    partsHeures[ss] = {};
+    heuresParPopulationPE[ss] = {};
+    PE_LIST.forEach(({ key }) => {
+      const part = elig[ss][key] !== 1 ? 0 : manuel !== null ? positive(manuel[key]) : chargeTotale > 0 ? charge[key] / chargeTotale : 0;
+      partsHeures[ss][key] = part;
+      const h = capacite * part;
+      heuresParPopulationPE[ss][key] = h;
+      capaciteDisponibleParPE[key] += h;
+      affecteSite[site] += h;
+    });
+  });
+  const capaciteTotale = Object.values(poolSite).reduce((a, v) => a + v, 0);
+  const capaciteAffectee = Object.values(capaciteDisponibleParPE).reduce((a, v) => a + v, 0);
+  const besoinTotal = Object.values(besoinHeures).reduce((a, v) => a + v, 0);
+  return { poolSite, affecteSite, chargeSite, poolPopulationStatut, chargePopulation, partsHeures, heuresParPopulationPE,
+    capaciteDisponibleParPE, besoinHeures, sitesEligiblesParPE, typeParPE, totalFlux, donneesManquantes, fluxHorsCompetence,
+    capaciteTotale, capaciteAffectee, capaciteNonAffectee: Math.max(0, capaciteTotale - capaciteAffectee),
+    besoinTotal, deltaNational: capaciteTotale - besoinTotal, deltaAffecte: capaciteAffectee - besoinTotal };
+}
+
+function PercentInput({ value, onChange, label, disabled = false }) {
+  const pourcentage = value === null ? '' : Math.round(value * 1000000) / 10000;
+  const ajuster = (sens) => {
+    if (disabled) return;
+    const prochain = Math.max(0, Math.min(100, Math.round((Number(pourcentage) + sens) * 10000) / 10000));
+    onChange(prochain / 100);
+  };
+  return <span className="percent-control">
+    <input type="number" min="0" max="100" step="1" aria-label={label} title={label}
+      value={pourcentage} disabled={disabled} placeholder="—"
+      className="border border-gray-300 rounded px-1 py-0.5 text-xs text-right"
+      onKeyDown={(e) => { if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { e.preventDefault(); ajuster(e.key === 'ArrowUp' ? 1 : -1); } }}
+      onChange={(e) => { const v = e.target.value; if (v === '') onChange(null); else if (Number.isFinite(Number(v)) && Number(v) >= 0 && Number(v) <= 100) onChange(Number(v) / 100); }} />
+    <span className="percent-controls">
+      <button type="button" disabled={disabled || pourcentage === 100} aria-label={`${label} : augmenter de 1 %`} title="Augmenter de 1 %" onClick={() => ajuster(1)}>▲</button>
+      <button type="button" disabled={disabled || pourcentage === 0} aria-label={`${label} : diminuer de 1 %`} title="Diminuer de 1 %" onClick={() => ajuster(-1)}>▼</button>
+    </span>
+  </span>;
+}
 
 const num = (v) => (Number.isFinite(v) ? Math.round(v * 10) / 10 : 0);
 const fmt = (v) => num(v).toLocaleString('fr-FR');
@@ -150,8 +366,9 @@ function CellInput({ value, onChange, width = 44 }) {
     <input
       type="number"
       value={value}
-      onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
+      onChange={(e) => onChange(Math.max(0, parseFloat(e.target.value) || 0))}
       style={{ width }}
+      min="0"
       className="border border-gray-300 rounded px-1 py-0.5 text-xs text-right"
     />
   );
@@ -170,107 +387,70 @@ function Dashboard() {
   const [productivite, setProductivite] = useState(INIT_PRODUCTIVITE);
   const [appels, setAppels] = useState(INIT_APPELS);
   const [elig, setElig] = useState(INIT_ELIG);
+  const [flux, setFlux] = useState(INIT_FLUX);
+  const [repartitionHeures, setRepartitionHeures] = useState(INIT_REPARTITION_HEURES);
+  const [peFlux, setPeFlux] = useState('SNT');
+  const [autresPopulationsFlux, setAutresPopulationsFlux] = useState(false);
+  const [repartitionOuverte, setRepartitionOuverte] = useState(false);
+  const [ongletRepartition, setOngletRepartition] = useState('flux');
+  const repartitionDialog = useRef(null);
+  useEffect(() => {
+    const dialog = repartitionDialog.current;
+    if (repartitionOuverte && !dialog.open) dialog.showModal();
+    else if (!repartitionOuverte && dialog.open) dialog.close();
+  }, [repartitionOuverte]);
+  const [populationHeures, setPopulationHeures] = useState('PTV_MULTI_CDI');
+  const [erreurRepartition, setErreurRepartition] = useState('');
+  const setFluxCell = (pe, ss, i, v) => setFlux((p) => ({...p,[pe]:{...p[pe],[ss]:setAt(p[pe][ss],i,v)}}));
   const [moisIdx, setMoisIdx] = useState(0);
   const [ongletActif, setOngletActif] = useState('resultats');
 
-  const setEffCell = (site, statut, moisI, v) =>
-    setEffectifs((p) => ({ ...p, [site]: { ...p[site], [statut]: setAt(p[site][statut], moisI, v) } }));
+  const setEffCell = (population, statut, moisI, v) =>
+    setEffectifs((p) => ({ ...p, [population]: { ...p[population], [statut]: setAt(p[population][statut], moisI, v) } }));
   const setHeuresCell = (statut, moisI, v) => setHeures((p) => ({ ...p, [statut]: setAt(p[statut], moisI, v) }));
   const setPresenceCell = (statut, moisI, v) => setPresence((p) => ({ ...p, [statut]: setAt(p[statut], moisI, v) }));
   const setProdCell = (pe, moisI, v) => setProductivite((p) => ({ ...p, [pe]: setAt(p[pe], moisI, v) }));
   const setAppelsCell = (pe, moisI, v) => setAppels((p) => ({ ...p, [pe]: setAt(p[pe], moisI, v) }));
   const toggleElig = (ss, pe) => setElig((p) => ({ ...p, [ss]: { ...p[ss], [pe]: p[ss][pe] ? 0 : 1 } }));
 
-  const { synthese12, detailMois } = useMemo(() => {
-    const synth = MOIS.map((m, i) => {
-      const poolSite = {};
-      SITES.forEach((s) => {
-        let t = 0;
-        STATUTS.forEach((st) => { t += (effectifs[s][st][i] || 0) * (heures[st][i] || 0) * (presence[st][i] || 0); });
-        poolSite[s] = t;
-      });
-      const besoinHeures = {};
-      PE_LIST.forEach(({ key }) => {
-        const p = productivite[key][i] || 0;
-        besoinHeures[key] = p > 0 ? (appels[key][i] || 0) / p : 0;
-      });
-      const capaciteTotale = SITES.reduce((a, s) => a + poolSite[s], 0);
-      const besoinTotal = PE_LIST.reduce((a, { key }) => a + besoinHeures[key], 0);
-      return { mois: m, capacite: capaciteTotale, besoin: besoinTotal, delta: capaciteTotale - besoinTotal };
-    });
-
-    const i = moisIdx;
-    const poolSite = {};
-    const poolSiteStatut = {};
-    SITES.forEach((s) => {
-      let t = 0;
-      STATUTS.forEach((st) => {
-        const c = (effectifs[s][st][i] || 0) * (heures[st][i] || 0) * (presence[st][i] || 0);
-        poolSiteStatut[`${s}_${st}`] = c;
-        t += c;
-      });
-      poolSite[s] = t;
-    });
-    const sitesEligiblesParPE = {};
-    PE_LIST.forEach(({ key }) => {
-      sitesEligiblesParPE[key] = SITES.filter((s) => STATUTS.some((st) => elig[`${s}_${st}`][key] === 1));
-    });
-    // Capacite disponible par PE = somme des heures des cases site_statut cochees pour ce PE.
-    // Formule : CAPACITE_DISPO[pe] = SOMME( site_statut coche ) de EFFECTIF x HEURES/PERS x PRESENCE
-    // (capacite "brute" si ce PE avait acces exclusif aux populations cochees ;
-    // ne tient pas compte du partage avec d'autres PE sur la meme case - voir Synthese par site
-    // pour le chiffre national non double-compte)
-    const capaciteDisponibleParPE = {};
-    PE_LIST.forEach(({ key }) => {
-      let t = 0;
-      SITE_STATUTS.forEach((ss) => { if (elig[ss][key] === 1) t += poolSiteStatut[ss]; });
-      capaciteDisponibleParPE[key] = t;
-    });
-    // Formule : BESOIN_HEURES[pe] = APPELS_PREVUS[pe] / PRODUCTIVITE[pe]  (productivite = appels traites / heure)
-    const besoinHeures = {};
-    PE_LIST.forEach(({ key }) => {
-      const p = productivite[key][i] || 0;
-      besoinHeures[key] = p > 0 ? (appels[key][i] || 0) / p : 0;
-    });
-    const typeParPE = {};
-    PE_LIST.forEach(({ key }) => {
-      const n = sitesEligiblesParPE[key].length;
-      typeParPE[key] = n === 0 ? 'AUCUN' : n === 1 ? 'MONO' : 'MULTI';
-    });
-    // Allocation monosite puis multisite (Delta = Capacite - Besoin, PDM section 21)
-    const besoinMonoParSite = { PTV: 0, PTM: 0, PTS: 0 };
-    PE_LIST.forEach(({ key }) => { if (typeParPE[key] === 'MONO') besoinMonoParSite[sitesEligiblesParPE[key][0]] += besoinHeures[key]; });
-    const deltaMonoParSite = {};
-    SITES.forEach((s) => { deltaMonoParSite[s] = poolSite[s] - besoinMonoParSite[s]; });
-    const sitesMulti = new Set();
-    let besoinMultiTotal = 0;
-    PE_LIST.forEach(({ key }) => { if (typeParPE[key] === 'MULTI') { sitesEligiblesParPE[key].forEach((s) => sitesMulti.add(s)); besoinMultiTotal += besoinHeures[key]; } });
-    const capaciteMultiDispo = [...sitesMulti].reduce((a, s) => a + deltaMonoParSite[s], 0);
-    const deltaMulti = capaciteMultiDispo - besoinMultiTotal;
-    const capaciteTotale = SITES.reduce((a, s) => a + poolSite[s], 0);
-    const besoinTotal = PE_LIST.reduce((a, { key }) => a + besoinHeures[key], 0);
-
-    return {
-      synthese12: synth,
-      detailMois: {
-        poolSite, poolSiteStatut, capaciteDisponibleParPE, sitesEligiblesParPE, besoinHeures, typeParPE, besoinMonoParSite,
-        deltaMonoParSite, sitesMulti, besoinMultiTotal, capaciteMultiDispo, deltaMulti,
-        capaciteTotale, besoinTotal, deltaNational: capaciteTotale - besoinTotal,
-      },
-    };
-  }, [effectifs, heures, presence, productivite, appels, elig, moisIdx]);
+  const calculs12 = useMemo(() => MOIS.map((m,i) => calculerMois(i,effectifs,heures,presence,productivite,appels,elig,flux,repartitionHeures)),
+    [effectifs,heures,presence,productivite,appels,elig,flux,repartitionHeures]);
+  const detailMois = calculs12[moisIdx];
+  const synthese12 = calculs12.map((d,i) => ({mois:MOIS[i],capacite:d.capaciteTotale,besoin:d.besoinTotal,delta:d.deltaNational}));
+  const setPartHeures = (ss, pe, i, valeur) => {
+    const parts = {...calculs12[i].partsHeures[ss],[pe]:valeur};
+    const total = Object.values(parts).reduce((a,v) => a+v,0);
+    // Tolérance limitée à l'arrondi d'affichage (4 décimales en pourcentage).
+    if (total > 1.0000005) {
+      setErreurRepartition(`${MOIS[i]} : total ${percentText(total)} %. Réduisez d'abord une autre part pour rester à 100 % maximum.`);
+      return;
+    }
+    if (total > 1) parts[pe] = Math.max(0, parts[pe]-(total-1));
+    setRepartitionHeures((p) => ({...p,[ss]:setAt(p[ss],i,parts)}));
+    setErreurRepartition('');
+  };
 
   const maxAbs = Math.max(...synthese12.map((s) => Math.max(s.capacite, s.besoin)), 1);
+  const lignesFlux = (lignes) => lignes.map(({key:ss, site, name, statut, label}) => (
+    <tr key={ss} className={statut === 'CDI' ? 'population-start' : ''}>
+      <td>{site}</td>
+      <td>{name}</td>
+      <td>{statut === 'ALT' ? 'alternants' : statut}</td>
+      <td className="text-center"><input type="checkbox" checked={elig[ss][peFlux] === 1} aria-label={`${label}, compétence ${peFlux}`} onChange={() => toggleElig(ss,peFlux)} /></td>
+      {MOIS.map((m,i) => <td key={m}><PercentInput value={flux[peFlux][ss][i]} label={`${label}, ${peFlux}, ${m}, part du flux en %`} onChange={(v) => setFluxCell(peFlux,ss,i,v)} /></td>)}
+    </tr>
+  ));
 
   return (
     <div className="max-w-6xl mx-auto p-4 text-sm space-y-6">
       <div>
-        <h2 className="text-lg font-medium mb-1">Dashboard PDM — 17 PE</h2>
-        <p className="text-gray-500 text-xs">Effectifs, heures/personne, présence, productivité et appels prévus sont éditables mois par mois. Tout se recalcule en direct et reste relié : Effectifs → Capacité, Appels prévus ÷ Productivité → Besoin, Compétences → Capacité disponible par PE.</p>
+        <h2 className="text-lg font-medium mb-1">Dashboard PDM — répartition des flux et des heures, 2026 ({PE_LIST.length} PE)</h2>
+        <p className="text-gray-500 text-xs">Effectifs → Heures disponibles. Appels ÷ Productivité × Part du flux → Charge reçue. Répartition des heures → Capacité attribuée à chaque PE. Les répartitions sont mensuelles et ajustables.</p>
+        <p className="text-gray-500 text-xs">Tous les PE sont multisites. Pour simuler la participation d’une population, renseignez ses effectifs, activez sa compétence sur le PE et ajustez la répartition du flux ou des heures.</p>
       </div>
 
       <div>
-        <h3 className="font-medium mb-2">Vue nationale — Capacité vs Besoin vs Delta, 12 mois</h3>
+        <h3 className="font-medium mb-2">Vue nationale — Heures disponibles vs Besoin connu, 12 mois</h3>
         <div className="space-y-1">
           {synthese12.map((s) => (
             <div key={s.mois} className="flex items-center gap-2">
@@ -304,27 +484,37 @@ function Dashboard() {
 
       <div className="grid grid-cols-3 gap-3">
         <div className="bg-gray-50 rounded-lg p-3">
-          <p className="text-xs text-gray-500">Capacité — {MOIS[moisIdx]}</p>
+          <p className="text-xs text-gray-500">Heures disponibles — {MOIS[moisIdx]}</p>
           <p className="text-xl font-medium text-blue-600">{fmt(detailMois.capaciteTotale)} h</p>
         </div>
         <div className="bg-gray-50 rounded-lg p-3">
-          <p className="text-xs text-gray-500">Besoin (17 PE) — {MOIS[moisIdx]}</p>
+          <p className="text-xs text-gray-500">Besoin connu — {MOIS[moisIdx]}</p>
           <p className="text-xl font-medium text-yellow-600">{fmt(detailMois.besoinTotal)} h</p>
         </div>
         <div className="bg-gray-50 rounded-lg p-3">
-          <p className="text-xs text-gray-500">Delta — {MOIS[moisIdx]}</p>
+          <p className="text-xs text-gray-500">Delta global avant affectation — {MOIS[moisIdx]}</p>
           <p className={`text-xl font-medium ${detailMois.deltaNational >= 0 ? 'text-green-700' : 'text-red-700'}`}>
             {detailMois.deltaNational >= 0 ? '+' : ''}{fmt(detailMois.deltaNational)} h
           </p>
         </div>
       </div>
 
-      <div className="flex gap-2 border-b border-gray-200">
+      <div className="bg-blue-50 rounded p-3 space-y-1">
+        <p><strong>{fmt(detailMois.capaciteAffectee)} h attribuées aux PE</strong> · {fmt(detailMois.capaciteNonAffectee)} h non attribuées · Delta après affectation : {fmt(detailMois.deltaAffecte)} h.</p>
+        <p className="text-xs">Le delta global inclut les heures encore libres. Le delta après affectation compare uniquement les heures attribuées aux besoins connus. Les excédents d’un PE ne couvrent pas automatiquement le déficit d’un autre.</p>
+        {detailMois.donneesManquantes.length > 0 && <p className="text-yellow-700 text-xs">Besoins incomplets : appels ou productivité à renseigner pour {detailMois.donneesManquantes.join(', ')}. Ces besoins sont exclus des totaux et du calcul automatique des parts d’heures.</p>}
+        {PE_LIST.some(({key}) => Math.abs(detailMois.totalFlux[key]-1)>0.000001) && <p className="text-yellow-700 text-xs">Répartition du flux à vérifier (total différent de 100 %) : {PE_LIST.filter(({key}) => Math.abs(detailMois.totalFlux[key]-1)>0.000001).map(({key}) => `${key} (${percentText(detailMois.totalFlux[key])} %)`).join(', ')}.</p>}
+        {detailMois.fluxHorsCompetence.length > 0 && <p className="text-red-700 text-xs">{detailMois.fluxHorsCompetence.length} part(s) de flux hors compétence exclue(s). Vérifiez les onglets Flux et Compétences.</p>}
+      </div>
+
+      <button className="repartition-launch" onClick={() => {setOngletRepartition('flux'); setRepartitionOuverte(true);}}>Ouvrir les clés de répartition</button>
+
+      <div className="flex gap-2 border-b border-gray-200" style={{flexWrap:'wrap'}}>
         {[
           ['resultats', 'Résultats par PE'],
           ['effectifs', 'Effectifs (matrice 12 mois)'],
           ['productivite', 'Productivité / Appels (matrice 12 mois)'],
-          ['competences', 'Compétences (matrice PE x site/statut)'],
+          ['competences', 'Compétences (PE × population/statut)'],
         ].map(([id, label]) => (
           <button
             key={id}
@@ -339,17 +529,17 @@ function Dashboard() {
       {ongletActif === 'resultats' && (
         <div>
           <p className="text-xs text-gray-400 mb-2">
-            "Capacité disponible" = somme des heures des cases cochées dans l'onglet Compétences pour ce PE (formule : Σ EFFECTIF × HEURES/PERS × PRÉSENCE sur les cases cochées).
-            "Besoin (h)" = Appels prévus ÷ Productivité (onglet Productivité / Appels). "Delta indicatif" = Capacité disponible − Besoin.
+            Capacité attribuée au PE = Σ (Effectif × Heures/pers × Présence × Part des heures du PE) sur les populations compétentes.
+            Besoin (h) = Appels prévus ÷ Productivité. Delta = Capacité attribuée − Besoin. La somme des capacités des PE ne dépasse jamais les heures disponibles.
           </p>
           <table className="border-collapse w-full">
             <thead>
               <tr className="text-gray-500">
                 <th className="text-left pb-1 pr-2 font-normal">PE</th>
                 <th className="pb-1 pr-2 font-normal">Besoin (h)</th>
-                <th className="pb-1 pr-2 font-normal">Capacité disponible (h)</th>
-                <th className="pb-1 pr-2 font-normal">Delta indicatif (h)</th>
-                <th className="pb-1 pr-2 font-normal">Type</th>
+                <th className="pb-1 pr-2 font-normal">Capacité attribuée (h)</th>
+                <th className="pb-1 pr-2 font-normal">Delta après affectation (h)</th>
+                <th className="pb-1 pr-2 font-normal">Volume traitable</th><th className="pb-1 pr-2 font-normal">Type</th>
                 <th className="pb-1 pr-2 font-normal">Site(s) éligible(s)</th>
               </tr>
             </thead>
@@ -359,14 +549,15 @@ function Dashboard() {
                 return (
                   <tr key={key} className="border-t border-gray-100">
                     <td className="py-1 pr-2 font-medium">{name}</td>
-                    <td className="py-1 pr-2 text-right text-yellow-700">{fmt(detailMois.besoinHeures[key])}</td>
+                    <td className="py-1 pr-2 text-right text-yellow-700">{detailMois.donneesManquantes.includes(key) ? '—' : fmt(detailMois.besoinHeures[key])}</td>
                     <td className="py-1 pr-2 text-right text-blue-700">{fmt(detailMois.capaciteDisponibleParPE[key])}</td>
                     <td className={`py-1 pr-2 text-right font-medium ${deltaInd >= 0 ? 'text-green-700' : 'text-red-700'}`}>
-                      {deltaInd >= 0 ? '+' : ''}{fmt(deltaInd)}
+                      {detailMois.donneesManquantes.includes(key) ? '—' : `${deltaInd >= 0 ? '+' : ''}${fmt(deltaInd)}`}
                     </td>
+                    <td className="py-1 pr-2 text-right">{positive(productivite[key][moisIdx]) > 0 ? fmt(detailMois.capaciteDisponibleParPE[key]*productivite[key][moisIdx]) : '—'}</td>
                     <td className="py-1 pr-2">
-                      <span className={`px-2 py-0.5 rounded text-xs ${detailMois.typeParPE[key] === 'MONO' ? 'bg-blue-50 text-blue-700' : 'bg-purple-50 text-purple-700'}`}>
-                        {detailMois.typeParPE[key]}
+                      <span className="px-2 py-0.5 rounded text-xs bg-purple-50 text-purple-700">
+                        Multisites
                       </span>
                     </td>
                     <td className="py-1 pr-2 text-gray-500">{detailMois.sitesEligiblesParPE[key].join(', ') || '—'}</td>
@@ -377,60 +568,86 @@ function Dashboard() {
           </table>
 
           <h3 className="font-medium mt-4 mb-2">Synthèse par site — {MOIS[moisIdx]}</h3>
-          <p className="text-xs text-gray-400 mb-2">Formule : Delta site = Capacité site − Besoin monosite du site. Formule multisite : Delta multisite = (Σ capacité restante des sites éligibles après monosite) − Besoin multisite total. Ce tableau n'additionne pas deux fois la même capacité, contrairement au détail par PE ci-dessus.</p>
-          <table className="border-collapse w-full">
-            <thead>
-              <tr className="text-gray-500">
-                <th className="text-left pb-1 pr-4 font-normal">Site</th>
-                <th className="pb-1 pr-4 font-normal">Capacité (h)</th>
-                <th className="pb-1 pr-4 font-normal">Besoin monosite (h)</th>
-                <th className="pb-1 pr-4 font-normal">Delta après monosite (h)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {SITES.map((s) => (
-                <tr key={s} className="border-t border-gray-100">
-                  <td className="py-1 pr-4 font-medium">{s}</td>
-                  <td className="py-1 pr-4 text-right text-blue-700">{fmt(detailMois.poolSite[s])}</td>
-                  <td className="py-1 pr-4 text-right text-yellow-700">{fmt(detailMois.besoinMonoParSite[s])}</td>
-                  <td className={`py-1 pr-4 text-right font-medium ${detailMois.deltaMonoParSite[s] >= 0 ? 'text-green-700' : 'text-red-700'}`}>
-                    {detailMois.deltaMonoParSite[s] >= 0 ? '+' : ''}{fmt(detailMois.deltaMonoParSite[s])}
-                  </td>
-                </tr>
-              ))}
-              <tr className="border-t border-gray-300 bg-gray-50">
-                <td className="py-1 pr-4 font-medium">Multisite ({[...detailMois.sitesMulti].join(', ')})</td>
-                <td className="py-1 pr-4 text-right text-blue-700">{fmt(detailMois.capaciteMultiDispo)}</td>
-                <td className="py-1 pr-4 text-right text-yellow-700">{fmt(detailMois.besoinMultiTotal)}</td>
-                <td className={`py-1 pr-4 text-right font-medium ${detailMois.deltaMulti >= 0 ? 'text-green-700' : 'text-red-700'}`}>
-                  {detailMois.deltaMulti >= 0 ? '+' : ''}{fmt(detailMois.deltaMulti)}
-                </td>
-              </tr>
-            </tbody>
+          <p className="text-xs text-gray-500 mb-2">Les heures attribuées sont comptées une seule fois. La charge reçue dépend de la répartition du flux ; un flux non réparti reste dans le besoin national.</p>
+          <table className="w-full text-xs"><thead><tr><th className="text-left">Site</th><th>Heures disponibles</th><th>Heures attribuées</th><th>Heures non attribuées</th><th>Charge reçue (h)</th><th>Delta attribué − charge</th></tr></thead>
+            <tbody>{SITES.map((s) => <tr key={s} className="border-t"><td>{s}</td><td className="text-right">{fmt(detailMois.poolSite[s])}</td><td className="text-right">{fmt(detailMois.affecteSite[s])}</td><td className="text-right">{fmt(Math.max(0,detailMois.poolSite[s]-detailMois.affecteSite[s]))}</td><td className="text-right">{fmt(detailMois.chargeSite[s])}</td><td className="text-right">{fmt(detailMois.affecteSite[s]-detailMois.chargeSite[s])}</td></tr>)}</tbody>
           </table>
         </div>
       )}
 
+      <dialog ref={repartitionDialog} className="repartition-dialog" aria-labelledby="repartition-title" onCancel={() => setRepartitionOuverte(false)} onClose={() => setRepartitionOuverte(false)}>
+        <div className="repartition-header">
+          <div><h2 id="repartition-title">Clés de répartition — 2026</h2><p className="text-xs text-gray-500">Les modifications actualisent directement les résultats du plan de marche.</p></div>
+          <button className="border rounded px-3 py-2" onClick={() => setRepartitionOuverte(false)} aria-label="Fermer les répartitions">Fermer ×</button>
+        </div>
+        <div className="flex gap-2 border-b mb-2" role="tablist" aria-label="Type de répartition">
+          {[['flux','Clés de répartition du flux (%)'],['repartition','Répartition des heures (%)']].map(([key,label]) => <button key={key} role="tab" aria-selected={ongletRepartition===key} className={`px-3 py-2 ${ongletRepartition===key ? 'border-b-2 text-blue-700 font-medium' : 'text-gray-500'}`} onClick={() => setOngletRepartition(key)}>{label}</button>)}
+        </div>
+        <div className="repartition-content">
+      {ongletRepartition === 'flux' && (
+        <div className="space-y-4 overflow-x-auto">
+          <label>Point d’entrée : <select aria-label="PE des clés de répartition" className="border rounded px-2 py-1" value={peFlux} onChange={(e) => setPeFlux(e.target.value)}>{PE_LIST.map(({key,name}) => <option key={key} value={key}>{name}</option>)}</select></label>
+          <p>Pour chaque PE, renseignez le pourcentage de ses appels envoyé à chaque population, mois par mois. Flux reçu = appels prévus selon poids et QS × clé de répartition.</p>
+          <table className="cles-table border-collapse text-xs" aria-label={`Clés mensuelles de ${PE_LIST.find((pe) => pe.key === peFlux).name}`}>
+            <thead><tr><th className="text-left">Site</th><th className="text-left">Population</th><th className="text-left">Statut</th><th>Compétence</th>{MOIS.map((m) => <th key={m}>{m} (%)</th>)}</tr></thead>
+            <tbody>
+              {lignesFlux(LIGNES_CLES)}
+              <tr className="other-populations"><td colSpan={16}><button className="text-blue-700" aria-expanded={autresPopulationsFlux} onClick={() => setAutresPopulationsFlux((v) => !v)}>{autresPopulationsFlux ? 'Masquer' : 'Afficher'} les autres populations : PTV, PTM TLV EPI et DR ({AUTRES_LIGNES_CLES.length} lignes)</button></td></tr>
+              {autresPopulationsFlux && lignesFlux(AUTRES_LIGNES_CLES)}
+              <tr className="border-t bg-gray-50"><th colSpan={4} className="text-left">Total du PE — toutes populations compétentes</th>{calculs12.map((d,i) => <td key={i} className={`text-right ${Math.abs(d.totalFlux[peFlux]-1) > 0.000001 ? 'text-red-700' : 'text-green-700'}`}>{percentText(d.totalFlux[peFlux])} %</td>)}</tr>
+              <tr><th colSpan={4} className="text-left">Écart à 100 % (+ manquant / − dépassement)</th>{calculs12.map((d,i) => <td key={i} className="text-right">{percentText(1-d.totalFlux[peFlux])} %</td>)}</tr>
+            </tbody>
+          </table>
+          <p className="text-xs text-gray-500">Le total inclut aussi les autres populations, même lorsque leurs lignes sont masquées. Il doit atteindre 100 % chaque mois. Cochez la compétence pour inclure une population dans le calcul.</p>
+        </div>
+      )}
+
+      {ongletRepartition === 'repartition' && (
+        <div className="space-y-4 overflow-x-auto">
+          <p>Les heures disponibles d’une population sont partagées entre ses PE. En mode automatique : charge reçue = appels du PE ÷ productivité × part du flux ; part des heures = charge reçue du PE ÷ charge totale reçue par la population.</p>
+          <label>Population / statut : <select className="border rounded px-2 py-1" value={populationHeures} onChange={(e) => {setPopulationHeures(e.target.value); setErreurRepartition('');}}>{POPULATION_STATUTS.map(({key,label}) => <option key={key} value={key}>{label}</option>)}</select></label>
+          <p className="text-xs text-gray-500">Modifier une case fixe la répartition de ce mois en mode manuel. Le total ne peut pas dépasser 100 % : réduisez d’abord une autre part pour libérer des heures. Un total inférieur à 100 % laisse des heures non attribuées. Sans charge connue, le mode automatique laisse les heures non attribuées.</p>
+          {erreurRepartition && <p role="alert" className="text-red-700">{erreurRepartition}</p>}
+          <table className="border-collapse text-xs">
+            <thead><tr><th className="text-left pr-2">PE</th>{MOIS.map((m) => <th key={m} className="px-1">{m} (%)</th>)}</tr></thead>
+            <tbody>
+              <tr className="bg-gray-50"><th className="text-left">Mode</th>{MOIS.map((m,i) => <td key={m} className="text-center">{repartitionHeures[populationHeures][i] === null ? 'Auto' : <button className="text-blue-700" title={`Revenir au calcul automatique pour ${m}`} onClick={() => {setRepartitionHeures((p) => ({...p,[populationHeures]:setAt(p[populationHeures],i,null)}));setErreurRepartition('');}}>Manuel ↺ Auto</button>}</td>)}</tr>
+              {PE_LIST.map(({key,name}) => <tr key={key}><td className="pr-2 whitespace-nowrap">{name}</td>{MOIS.map((m,i) => <td key={m} className="px-1 py-0.5"><PercentInput value={calculs12[i].partsHeures[populationHeures][key]} disabled={!elig[populationHeures][key]} label={`${name}, ${m}, part des heures en %`} onChange={(v) => setPartHeures(populationHeures,key,i,v || 0)} /></td>)}</tr>)}
+              <tr className="border-t bg-gray-50"><th className="text-left">Total des heures réparties (%)</th>{calculs12.map((d,i) => <td key={i} className="text-right px-1">{percentText(Object.values(d.partsHeures[populationHeures]).reduce((a,v) => a+v,0))} %</td>)}</tr>
+              <tr><th className="text-left">Heures disponibles</th>{calculs12.map((d,i) => <td key={i} className="text-right px-1">{fmt(d.poolPopulationStatut[populationHeures])}</td>)}</tr>
+              <tr><th className="text-left">Heures non attribuées</th>{calculs12.map((d,i) => <td key={i} className="text-right px-1">{fmt(Math.max(0,d.poolPopulationStatut[populationHeures]-Object.values(d.heuresParPopulationPE[populationHeures]).reduce((a,v) => a+v,0)))}</td>)}</tr>
+            </tbody>
+          </table>
+          <h3>Détail — {MOIS[moisIdx]} 2026</h3>
+          <table className="w-full text-xs"><thead><tr><th className="text-left">PE</th><th>Flux reçu (%)</th><th>Charge reçue (h)</th><th>Part des heures (%)</th><th>Heures attribuées</th><th>Volume traitable</th></tr></thead>
+            <tbody>{PE_LIST.map(({key,name}) => <tr key={key} className="border-t"><td>{name}</td><td className="text-right">{flux[key][populationHeures][moisIdx] === null ? '—' : percentText(flux[key][populationHeures][moisIdx])}</td><td className="text-right">{detailMois.donneesManquantes.includes(key) ? '—' : fmt(detailMois.chargePopulation[populationHeures][key])}</td><td className="text-right">{percentText(detailMois.partsHeures[populationHeures][key])}</td><td className="text-right">{fmt(detailMois.heuresParPopulationPE[populationHeures][key])}</td><td className="text-right">{positive(productivite[key][moisIdx]) > 0 ? fmt(detailMois.heuresParPopulationPE[populationHeures][key]*productivite[key][moisIdx]) : '—'}</td></tr>)}</tbody>
+          </table>
+        </div>
+      )}
+
+        </div>
+      </dialog>
+
       {ongletActif === 'effectifs' && (
         <div className="space-y-4 overflow-x-auto">
-          <p className="text-xs text-gray-400">Formule reliée : Capacité[site,mois] = Σ(statut) Effectif × Heures/pers × Présence — visible dans l'onglet "Résultats par PE" et dans la vue nationale ci-dessus.</p>
-          {SITES.map((s) => (
-            <div key={s}>
-              <p className="font-medium mb-1">{s}</p>
+          <p className="text-xs text-gray-400">{POPULATIONS.length} populations, chacune répartie en CDI, CDD et alternants, soit {POPULATION_STATUTS.length} lignes. Les effectifs DR1 à DR7 sont initialisés à zéro et à renseigner. Capacité du site = somme des capacités de ses populations (Effectif × Heures/pers × Présence). Les heures et taux de présence restent communs par statut.</p>
+          {POPULATIONS.map(({ key: population, site, name }) => (
+            <div key={population}>
+              <p className="font-medium mb-1">{site === name ? name : `${site} / ${name}`}</p>
               <table className="border-collapse text-xs">
                 <thead>
                   <tr>
-                    <th className="text-left pr-2 pb-1 text-gray-500 font-normal">Statut</th>
+                    <th className="text-left pr-2 pb-1 text-gray-500 font-normal">Site / Population / Statut</th>
                     {MOIS.map((m) => <th key={m} className="px-1 pb-1 text-gray-500 font-normal">{m}</th>)}
                   </tr>
                 </thead>
                 <tbody>
                   {STATUTS.map((st) => (
                     <tr key={st}>
-                      <td className="pr-2 py-0.5 font-medium">{st}</td>
+                      <td className="pr-2 py-0.5 font-medium whitespace-nowrap">{POPULATION_STATUTS.find((row) => row.population === population && row.statut === st).label}</td>
                       {MOIS.map((m, i) => (
                         <td key={m} className="px-0.5 py-0.5">
-                          <CellInput value={effectifs[s][st][i]} onChange={(v) => setEffCell(s, st, i, v)} />
+                          <CellInput value={effectifs[population][st][i]} onChange={(v) => setEffCell(population, st, i, v)} />
                         </td>
                       ))}
                     </tr>
@@ -463,7 +680,7 @@ function Dashboard() {
             </table>
           </div>
           <div>
-            <p className="font-medium mb-1">Taux de présence</p>
+            <p className="font-medium mb-1">Taux de présence (%)</p>
             <table className="border-collapse text-xs">
               <thead>
                 <tr>
@@ -477,7 +694,7 @@ function Dashboard() {
                     <td className="pr-2 py-0.5 font-medium">{st}</td>
                     {MOIS.map((m, i) => (
                       <td key={m} className="px-0.5 py-0.5">
-                        <CellInput value={presence[st][i]} onChange={(v) => setPresenceCell(st, i, v)} />
+                        <PercentInput value={presence[st][i]} label={`${st}, ${m}, taux de présence en %`} onChange={(v) => setPresenceCell(st, i, v === null ? 0 : v)} />
                       </td>
                     ))}
                   </tr>
@@ -516,6 +733,8 @@ function Dashboard() {
           </div>
           <div>
             <p className="font-medium mb-1">Appels prévus</p>
+            <p className="text-xs text-gray-500">Source : matricerepartition.xlsx, onglet besoin, mois de janvier à décembre 2026, pour AMHAUD, TLV INT GG, SPE2, TLV SPE2 et TLV EPI. Les volumes mensuels sont repris tels quels. Les autres PE conservent leurs prévisions.</p>
+            <p className="font-medium">Prévision retenue : PREV 2026 selon poids et QS.</p>
             <table className="border-collapse text-xs">
               <thead>
                 <tr>
@@ -543,20 +762,20 @@ function Dashboard() {
       {ongletActif === 'competences' && (
         <div className="overflow-x-auto">
           <p className="text-xs text-gray-400 mb-2">
-            Ne varie pas dans le temps. Formule reliée : Capacité disponible[pe] = Σ (cases cochées) Effectif × Heures/pers × Présence.
-            Les lignes "Capacité dispo (h)" et "Besoin (h)" ci-dessous se recalculent en direct pour le mois sélectionné ({MOIS[moisIdx]}) — décochez une case et regardez-les bouger.
+            Les compétences indiquent les PE autorisés pour chaque population et statut. Une coche ne réserve aucune heure à elle seule : l’affectation dépend de la répartition du flux et des heures.
+            Les parts positives du classeur ont été ajoutées aux compétences initiales. Décocher un PE exclut son flux et ses heures ; les pourcentages saisis sont conservés. En mode automatique, les heures sont recalculées entre les PE restants. En mode manuel, les heures libérées restent non attribuées.
           </p>
           <table className="border-collapse text-xs">
             <thead>
               <tr>
-                <th className="text-left pr-2 pb-1 text-gray-500 font-normal sticky left-0 bg-white">Site_Statut</th>
+                <th className="text-left pr-2 pb-1 text-gray-500 font-normal sticky left-0 bg-white">Site / Population / Statut</th>
                 {PE_LIST.map(({ key, name }) => <th key={key} className="px-1 pb-1 text-gray-500 font-normal" title={name}>{key}</th>)}
               </tr>
             </thead>
             <tbody>
-              {SITE_STATUTS.map((ss) => (
+              {POPULATION_STATUTS.map(({ key: ss, label }) => (
                 <tr key={ss}>
-                  <td className="pr-2 py-0.5 font-medium sticky left-0 bg-white">{ss}</td>
+                  <td className="pr-2 py-0.5 font-medium sticky left-0 bg-white whitespace-nowrap">{label}</td>
                   {PE_LIST.map(({ key }) => (
                     <td key={key} className="text-center px-1 py-0.5">
                       <input type="checkbox" checked={elig[ss][key] === 1} onChange={() => toggleElig(ss, key)} />
@@ -565,7 +784,7 @@ function Dashboard() {
                 </tr>
               ))}
               <tr className="border-t-2 border-gray-400 bg-blue-50">
-                <td className="pr-2 py-1 font-medium sticky left-0 bg-blue-50">Capacité dispo (h) — {MOIS[moisIdx]}</td>
+                <td className="pr-2 py-1 font-medium sticky left-0 bg-blue-50">Capacité attribuée (h) — {MOIS[moisIdx]}</td>
                 {PE_LIST.map(({ key }) => (
                   <td key={key} className="text-center px-1 py-1 font-medium text-blue-700">{fmt(detailMois.capaciteDisponibleParPE[key])}</td>
                 ))}
@@ -573,14 +792,14 @@ function Dashboard() {
               <tr className="bg-yellow-50">
                 <td className="pr-2 py-1 font-medium sticky left-0 bg-yellow-50">Besoin (h) — {MOIS[moisIdx]}</td>
                 {PE_LIST.map(({ key }) => (
-                  <td key={key} className="text-center px-1 py-1 text-yellow-700">{fmt(detailMois.besoinHeures[key])}</td>
+                  <td key={key} className="text-center px-1 py-1 text-yellow-700">{detailMois.donneesManquantes.includes(key) ? '—' : fmt(detailMois.besoinHeures[key])}</td>
                 ))}
               </tr>
               <tr>
-                <td className="pr-2 py-1 font-medium sticky left-0 bg-white">Delta indicatif (h) — {MOIS[moisIdx]}</td>
+                <td className="pr-2 py-1 font-medium sticky left-0 bg-white">Delta après affectation (h) — {MOIS[moisIdx]}</td>
                 {PE_LIST.map(({ key }) => {
                   const d = detailMois.capaciteDisponibleParPE[key] - detailMois.besoinHeures[key];
-                  return <td key={key} className={`text-center px-1 py-1 font-medium ${d >= 0 ? 'text-green-700' : 'text-red-700'}`}>{d >= 0 ? '+' : ''}{fmt(d)}</td>;
+                  return <td key={key} className={`text-center px-1 py-1 font-medium ${d >= 0 ? 'text-green-700' : 'text-red-700'}`}>{detailMois.donneesManquantes.includes(key) ? '—' : `${d >= 0 ? '+' : ''}${fmt(d)}`}</td>;
                 })}
               </tr>
             </tbody>
@@ -589,12 +808,11 @@ function Dashboard() {
       )}
 
       <p className="text-xs text-gray-400">
-        Rappel : 17 PE couverts. Besoin monosite = somme
-        des PE monosite du site sans distinction fine du statut éligible.
+        {PE_LIST.length} PE et {POPULATIONS.length} populations. Les cases vides du classeur restent à compléter. Les modifications de cette page restent en mémoire jusqu’au rechargement.
       </p>
 
-      <footer className="mt-10 pt-4 border-t border-gray-200 text-center text-xs text-gray-500">
-        Yann Kahia - Chef de pilotage téléphonie commerciale - Tous droits réservés
+      <footer className="text-xs text-gray-500 text-center border-t pt-4">
+        Yann Kahia — Chef de pilotage téléphonie commerciale — Tous droits réservés
       </footer>
     </div>
   );
